@@ -1,0 +1,5 @@
+server:
+  port: :8080
+  max_history: 100
+database:
+  path: ./chat.db
