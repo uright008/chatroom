@@ -396,6 +396,7 @@ func renderIndex(w http.ResponseWriter) {
 	}
 }
 
+//go:embed assets/*
 var staticFiles embed.FS
 
 func initStaticDir() error {
