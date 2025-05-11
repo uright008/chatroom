@@ -1,3 +1,5 @@
+package main
+
 import (
 	"database/sql"
 	"embed"
@@ -393,6 +395,8 @@ func renderIndex(w http.ResponseWriter) {
 		http.Error(w, "无法渲染模板", http.StatusInternalServerError)
 	}
 }
+
+var staticFiles embed.FS
 
 func initStaticDir() error {
 	// 从嵌入的文件系统中提取静态文件
