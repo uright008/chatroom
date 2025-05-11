@@ -1,17 +1,18 @@
-package main
-
 import (
 	"database/sql"
+	"embed"
 	"encoding/json"
 	"flag"
+	"fmt"
+	"html/template"
 	"io"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strconv"
 	"time"
-	"html/template"
 
 	"github.com/BurntSushi/toml"
 	"github.com/google/uuid"
@@ -393,9 +394,61 @@ func renderIndex(w http.ResponseWriter) {
 	}
 }
 
+func initStaticDir() error {
+	// 从嵌入的文件系统中提取静态文件
+	staticDir := "static"
+	err := os.MkdirAll(staticDir, 0755)
+	if err != nil {
+		return fmt.Errorf("无法创建static目录: %v", err)
+	}
+
+	// 遍历嵌入的静态文件并写入磁盘
+	err = fs.WalkDir(staticFiles, "assets/static", func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+
+		// 跳过根目录
+		if path == "assets/static" {
+			return nil
+		}
+
+		// 计算目标路径
+		relPath, err := filepath.Rel("assets/static", path)
+		if err != nil {
+			return err
+		}
+		targetPath := filepath.Join(staticDir, relPath)
+
+		if d.IsDir() {
+			return os.MkdirAll(targetPath, 0755)
+		}
+
+		// 读取嵌入的文件
+		data, err := staticFiles.ReadFile(path)
+		if err != nil {
+			return err
+		}
+
+		// 写入目标文件
+		return os.WriteFile(targetPath, data, 0644)
+	})
+
+	if err != nil {
+		return fmt.Errorf("无法提取静态文件: %v", err)
+	}
+
+	return nil
+}
+
 func main() {
 	flag.Parse()
 	
+	// 初始化静态文件目录
+	if err := initStaticDir(); err != nil {
+		log.Fatalf("初始化静态文件失败: %v", err)
+	}
+
 	// 初始化配置和数据库
 	initConfig()
 	initDB()

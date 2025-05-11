@@ -1,4 +1,4 @@
 /config
-/static/uploads
+/assets/static/uploads
 /chatroom.db
 /go-chatroom.exe
