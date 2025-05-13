@@ -32,7 +32,7 @@ jobs:
           if [ "$GOOS" = "windows" ]; then
             output_name="$output_name.exe"
           fi
-          CGO_ENABLED=0 go build -o "bin/$GOOS-$GOARCH/$output_name" .
+          CGO_ENABLED=0 go build -o "bin/$GOOS-$GOARCH/$output_name" .\cmd\server\main.go
           
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
