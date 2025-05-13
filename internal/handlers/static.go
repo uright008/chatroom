@@ -7,12 +7,11 @@ import (
 	"io/fs"
 	"net/http"
 	"os"
-	"path/filepath"
 
 	"go-chatroom/internal/config"
 )
 
-//go:embed assets/*
+//go:embed index.html
 var staticFiles embed.FS
 
 func InitStaticDir() error {
@@ -23,49 +22,19 @@ func InitStaticDir() error {
 	}
 
 	err = fs.WalkDir(staticFiles, "assets", func(path string, d fs.DirEntry, err error) error {
+		uploadsDir := "uploads"
+		err = os.MkdirAll(uploadsDir, 0755)
 		if err != nil {
-			return err
+			return fmt.Errorf("无法创建static目录: %v", err)
 		}
-
-		// Skip the root directory
-		if path == "assets" {
-			return nil
-		}
-
-		// Calculate the target path
-		relPath, err := filepath.Rel("assets", path)
-		if err != nil {
-			return err
-		}
-		targetPath := filepath.Join(staticDir, relPath)
-
-		if d.IsDir() {
-			return os.MkdirAll(targetPath, 0755)
-		 }
-
-		// Read the embedded file
-		data, err := staticFiles.ReadFile(path)
-		if err != nil {
-			return err
-		}
-
-		// Write the target file
-		return os.WriteFile(targetPath, data, 0644)
+		
+		return nil
 	})
-
-	if err != nil {
-		return fmt.Errorf("无法提取静态文件: %v", err)
-	}
-
 	return nil
 }
 
 func RenderIndex(w http.ResponseWriter, ui config.UIConfig) {
-	tmpl, err := template.ParseFiles("static/index.html")
-	if err != nil {
-		http.Error(w, "无法加载模板", http.StatusInternalServerError)
-		return
-	}
+	tmpl := template.Must(template.New("index.html").ParseFS(staticFiles, "index.html"))
 
 	data := struct {
 		Title     string
@@ -75,7 +44,7 @@ func RenderIndex(w http.ResponseWriter, ui config.UIConfig) {
 		PageTitle: ui.PageTitle,
 	}
 
-	err = tmpl.Execute(w, data)
+	err := tmpl.Execute(w, data)
 	if err != nil {
 		http.Error(w, "无法渲染模板", http.StatusInternalServerError)
 	}
