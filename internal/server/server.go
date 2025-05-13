@@ -6,9 +6,9 @@ import (
 	"net/http"
 
 	"github.com/gorilla/websocket"
-	"github.com/uright008/chatroom/internal/config"
-	"github.com/uright008/chatroom/internal/database"
-	"github.com/uright008/chatroom/internal/handlers"
+	"go-chatroom/internal/config"
+	"go-chatroom/internal/database"
+	"go-chatroom/internal/handlers"
 )
 
 type Server struct {

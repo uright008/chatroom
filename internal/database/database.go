@@ -6,8 +6,8 @@ import (
 
 	_ "modernc.org/sqlite"
 
-	"github.com/uright008/chatroom/internal/config"
-	"github.com/uright008/chatroom/internal/models"
+	"go-chatroom/internal/config"
+	"go-chatroom/internal/models"
 )
 
 type Database struct {

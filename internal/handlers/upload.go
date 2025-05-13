@@ -6,10 +6,11 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/google/uuid"
-	"github.com/uright008/chatroom/internal/database"
-	"github.com/uright008/chatroom/internal/models"
+	"go-chatroom/internal/database"
+	"go-chatroom/internal/models"
 )
 
 func InitUploadDir(uploadDir string) error {

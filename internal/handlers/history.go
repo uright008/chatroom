@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/uright008/chatroom/internal/database"
+	"go-chatroom/internal/database"
 )
 
 func HandleHistoryRequest(w http.ResponseWriter, r *http.Request, db *database.Database, defaultLimit int) {

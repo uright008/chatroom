@@ -1,5 +1,5 @@
 /config
 /assets/static/uploads
-/chatroom.db
+/chatroom*
 /go-chatroom.exe
 /static

@@ -3,10 +3,11 @@ package handlers
 import (
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/websocket"
-	"github.com/uright008/chatroom/internal/database"
-	"github.com/uright008/chatroom/internal/models"
+	"go-chatroom/internal/database"
+	"go-chatroom/internal/models"
 )
 
 var (
